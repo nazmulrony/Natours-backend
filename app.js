@@ -6,6 +6,16 @@ const app = express();
 //simple middleware
 app.use(express.json());
 
+app.use((req, res, next) => {
+    console.log('Hello form the middleware!👀');
+    next();
+});
+
+app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString();
+    next();
+});
+
 const port = 3000;
 
 app.get('/', (req, res) => {
@@ -29,6 +39,7 @@ const getAllTours = (req, res) => {
 
 const getTour = (req, res) => {
     const id = req.params.id * 1;
+    const requestTime = req.requestTime;
     const tour = tours.find((item) => item.id === id);
     if (!tour) {
         return res.status(404).json({
@@ -39,6 +50,7 @@ const getTour = (req, res) => {
 
     res.status(200).json({
         status: 'success',
+        requestTime,
         data: { tour },
     });
 };
