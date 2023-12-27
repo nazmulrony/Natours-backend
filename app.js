@@ -1,9 +1,5 @@
 const express = require('express');
-const fs = require('fs');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
