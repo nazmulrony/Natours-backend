@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.status(200).send({
         message: 'Hello from the server side.',
-        app: 'Natours',
+        app: 'Natours'
     });
 });
 
