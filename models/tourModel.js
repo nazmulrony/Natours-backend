@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const tourSchema = new mongoose.Schema({
+const { Schema } = mongoose;
+
+const tourSchema = new Schema({
     name: {
         type: String,
         required: [true, 'The tour must have a name.'],

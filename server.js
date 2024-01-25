@@ -11,13 +11,14 @@ const DB = process.env.DATABASE.replace(
 );
 
 // console.log(process.env.DATABASE_PASSWORD);
-
+mongoose.set('useCreateIndex', true);
 mongoose
     .connect(DB, {
         //these are some options to deal with deprecation warnings
         useNewUrlParser: true,
         useCreateIndex: true,
-        useFindAndModify: false
+        useFindAndModify: false,
+        useUnifiedTopology: true
     })
     .then(() => console.log('DB connection successful'));
 
