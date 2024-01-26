@@ -50,7 +50,8 @@ const tourSchema = new Schema({
     images: [String],
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        select: false //this line doesn't send this field in the response
     },
     startDates: [Date]
 });
