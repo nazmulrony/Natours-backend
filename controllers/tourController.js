@@ -29,10 +29,10 @@ const Tour = require('./../models/tourModel');
 exports.getAllTours = async (req, res) => {
     try {
         // BUILD QUERY
-        console.log(req.query);
+        console.log(req.query.sort);
 
         //1A) FILTERING
-        const queryObj = req.query;
+        const queryObj = { ...req.query }; //this line has to as object spread or sort, page, limit will get deleted from the query
 
         const excludedFields = ['sort', 'page', 'limit', 'fields'];
         excludedFields.forEach(element => delete queryObj[element]);
@@ -46,10 +46,14 @@ exports.getAllTours = async (req, res) => {
         let query = Tour.find(JSON.parse(queryStr));
 
         //2) SORTING
-        if (req.query.sort) {
+        if (req.query) {
             const sortBy = req.query.sort.split(',').join(' ');
-            console.log(sortBy);
+
             query = query.sort(sortBy);
+        }
+
+        if (req.query) {
+            console.log('if block executed', req.query);
         }
 
         // EXECUTE THE QUERY
