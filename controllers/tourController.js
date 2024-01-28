@@ -56,19 +56,23 @@ exports.getAllTours = async (req, res) => {
         // 3) FIELDS LIMITING (projection)
         if (req.query.fields) {
             const fields = req.query.fields.split(',').join(' ');
-            console.log('fields');
             query = query.select(fields);
         } else {
             query = query.select('-__v');
         }
 
+        // 4) PAGINATION
+        const page = req.query.page * 1 || 1;
+        const limit = req.query.limit * 1 || 100;
+        const skip = (page - 1) * limit;
+        query = query.skip(skip).limit(limit);
+
+        if (req.query.page) {
+            const tourCount = await Tour.countDocuments();
+            if (skip >= tourCount) throw new Error('This page does not exist');
+        }
         // EXECUTE THE QUERY
         const tours = await query;
-        // const query =  Tour.find()
-        //     .where('duration')
-        //     .equals(5)
-        //     .where('difficulty')
-        //     .equals('easy');
 
         // SEND RESPONSE
         res.status(200).json({
