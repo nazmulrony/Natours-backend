@@ -86,7 +86,17 @@ tourSchema.pre('save', function(next) {
 // });
 
 // QUERY middleware
-tourSchema.pre('find', function(next) {
+tourSchema.pre(/^find/, function(next) {
+    this.find({ isSecret: { $ne: true } });
+    this.start = Date.now();
+    next();
+});
+
+// query post middleware has the access to this keyword
+tourSchema.post(/^find/, function(docs, next) {
+    console.log(
+        `Query took ${Date.now() - this.start} milliseconds to execute.`
+    );
     next();
 });
 
