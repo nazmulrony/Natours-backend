@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { default: slugify } = require('slugify');
 
 const { Schema } = mongoose;
 
@@ -9,6 +10,11 @@ const tourSchema = new Schema(
             required: [true, 'The tour must have a name.'],
             trim: true,
             unique: true
+        },
+        slug: String,
+        isSecret: {
+            type: Boolean,
+            default: false
         },
         duration: {
             type: Number,
@@ -64,8 +70,24 @@ tourSchema.virtual('durationWeeks').get(function() {
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
-tourSchema.pre('save', function() {
-    console.log(this);
+tourSchema.pre('save', function(next) {
+    this.slug = slugify(this.name, { lower: true });
+    next();
+});
+// tourSchema.pre('save', function(next) {
+//     console.log('Document to be saved..');
+//     next();
+// });
+
+// mongoose post  middleware: runs after .save() and .create() and doesn't have access to this keyword
+// tourSchema.post('save', function(doc, next) {
+//     console.log(doc);
+//     next();
+// });
+
+// QUERY middleware
+tourSchema.pre('find', function(next) {
+    next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
