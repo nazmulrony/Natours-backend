@@ -94,9 +94,20 @@ tourSchema.pre(/^find/, function(next) {
 
 // query post middleware has the access to this keyword
 tourSchema.post(/^find/, function(docs, next) {
-    console.log(
-        `Query took ${Date.now() - this.start} milliseconds to execute.`
-    );
+    // console.log(
+    //     `Query took ${Date.now() - this.start} milliseconds to execute.`
+    // );
+    next();
+});
+
+// AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function(next) {
+    this.pipeline().unshift({
+        $match: {
+            isSecret: { $ne: true }
+        }
+    });
+    console.log(this.pipeline());
     next();
 });
 
