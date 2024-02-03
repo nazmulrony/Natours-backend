@@ -29,4 +29,21 @@ app.get('/', (req, res) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
+app.all('/*', (req, res) => {
+    res.status(404).json({
+        status: 'fail',
+        message: `can't fin ${req.originalUrl} on this server`
+    });
+});
+
+app.use((error, req, res, next) => {
+    error.stausCode = error.statusCode || 500;
+    error.status = error.status || 'fail';
+
+    res.status(error.statusCode).json({
+        status: error.status,
+        message: error.message
+    });
+});
+
 module.exports = app;
