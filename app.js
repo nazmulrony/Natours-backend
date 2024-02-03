@@ -29,20 +29,24 @@ app.get('/', (req, res) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-app.all('/*', (req, res) => {
-    res.status(404).json({
-        status: 'fail',
-        message: `can't fin ${req.originalUrl} on this server`
-    });
+app.all('/*', (req, res, next) => {
+    // res.status(404).json({
+    //     status: 'fail',
+    //     message: `can't fin ${req.originalUrl} on this server`
+    // });
+    const error = new Error(`can't fin ${req.originalUrl} on this server`);
+    error.status = 'fail';
+    error.statusCode = 404;
+    next(error);
 });
 
-app.use((error, req, res, next) => {
-    error.stausCode = error.statusCode || 500;
-    error.status = error.status || 'fail';
+app.use((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'fail';
 
-    res.status(error.statusCode).json({
-        status: error.status,
-        message: error.message
+    res.status(err.statusCode).json({
+        status: false,
+        message: err.message
     });
 });
 
