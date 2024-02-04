@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
@@ -34,14 +35,6 @@ app.all('/*', (req, res, next) => {
     next(new AppError(`can't fin ${req.originalUrl} on this server`, 404));
 });
 
-app.use((err, req, res, next) => {
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'fail';
-
-    res.status(err.statusCode).json({
-        status: false,
-        message: err.message
-    });
-});
+app.use(globalErrorHandler);
 
 module.exports = app;
