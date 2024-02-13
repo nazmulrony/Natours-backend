@@ -1,6 +1,13 @@
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
+//UNCAUGHT EXCEPTION HANDLER
+process.on('uncaughtException', err => {
+    console.log('UNCAUGHT EXCEPTION 💥, shutting down...');
+    console.log(err.name, err.message);
+    process.exit(1);
+});
+
 dotenv.config();
 
 const app = require('./app');
@@ -28,9 +35,10 @@ const server = app.listen(port, () => {
     console.log(`Server running on port ${port}...`);
 });
 
+// UNHANDLED REJECTION HANDLER (asynchronous errors)
 process.on('unhandledRejection', err => {
-    console.log(err.name, err.message);
     console.log('UNHANDLED REJECTION 💥, shutting down...');
+    console.log(err.name, err.message);
     server.close(() => {
         process.exit(1);
     });
