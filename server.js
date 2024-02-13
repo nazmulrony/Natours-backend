@@ -11,7 +11,6 @@ const DB = process.env.DATABASE.replace(
 );
 
 // console.log(process.env.DATABASE_PASSWORD);
-mongoose.set('useCreateIndex', true);
 mongoose
     .connect(DB, {
         //these are some options to deal with deprecation warnings
@@ -25,6 +24,14 @@ mongoose
 const port = 3000;
 
 // START THE SERVER
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server running on port ${port}...`);
+});
+
+process.on('unhandledRejection', err => {
+    console.log(err.name, err.message);
+    console.log('UNHANDLED REJECTION 💥, shutting down...');
+    server.close(() => {
+        process.exit(1);
+    });
 });
