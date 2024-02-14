@@ -6,7 +6,7 @@ const handleErrorDB = err => {
 };
 
 const handleDuplicateFieldsDB = err => {
-    const message = `Duplicate field value: ${err.keyValue.name}`;
+    const message = `Duplicate field value: ${Object.values(err.keyValue)[0]}`;
     return new AppError(message, 400);
 };
 
