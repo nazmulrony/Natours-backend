@@ -48,5 +48,14 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+// Instance method
+//METHOD CHECK if the password is correct during sign in
+userSchema.methods.isPasswordCorrect = async function(
+    inputPassword,
+    userPassword
+) {
+    return await bcrypt.compare(inputPassword, userPassword);
+};
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;
