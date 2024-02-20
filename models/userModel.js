@@ -16,6 +16,14 @@ const userSchema = new Schema({
         lowerCase: true,
         validate: [validator.isEmail, 'Please provide a valid email']
     },
+    role: {
+        type: String,
+        enum: {
+            values: ['user', 'guide', 'lead-guide', 'admin'],
+            message: 'Invalid user role!'
+        },
+        default: 'user'
+    },
     photo: {
         type: String
     },
