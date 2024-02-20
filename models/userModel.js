@@ -62,9 +62,9 @@ userSchema.methods.isPasswordCorrect = async function(
 userSchema.methods.isPasswordChangedAfter = async function(JwtTimestamp) {
     if (this.passwordChangedAt) {
         const changedPasswordStamp = this.passwordChangedAt.getTime() / 1000; //changing ms to seconds
+        console.log(JwtTimestamp, changedPasswordStamp);
         return JwtTimestamp < changedPasswordStamp;
     }
-
     return false;
 };
 const User = mongoose.model('User', userSchema);
