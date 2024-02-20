@@ -82,6 +82,12 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     //Check if user changed the password after the token was issued
+    if (currentUser.isPasswordChangedAfter(decoded.iat)) {
+        return next(
+            new AppError('Password recently changed. Please login again.', 401)
+        );
+    }
 
+    req.user = currentUser;
     next();
 });
