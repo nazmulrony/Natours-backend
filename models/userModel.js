@@ -49,6 +49,7 @@ const userSchema = new Schema({
     passwordResetExpires: Date
 });
 
+// middleware to check if both password and the confirm passwords are same
 userSchema.pre('save', async function(next) {
     // Only runs this function if the password was actually modified
     if (!this.isModified('password')) return next();
@@ -57,6 +58,15 @@ userSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, 12);
     // Delete the passwordConfirm
     this.passwordConfirm = undefined;
+    next();
+});
+
+// middleware to update the changedPasswordAt property
+userSchema.pre('save', async function(next) {
+    // Only runs this function if the password was actually modified
+    if (!this.isModified('password') || this.isNew) return next();
+
+    this.passwordChangedAt = Date.now() - 1000; //This is because sometimes saving to database takes more time than issuing Jwt token.
     next();
 });
 
