@@ -37,6 +37,8 @@ const userSchema = new Schema({
     passwordConfirm: {
         type: String,
         required: [true, 'Please confirm your password.'],
+
+        // This only works on CREATE and SAVE!!!
         validate: {
             validator: function(value) {
                 return value === this.password;
@@ -71,7 +73,7 @@ userSchema.pre('save', async function(next) {
 });
 
 // Instance method
-//METHOD CHECK if the password is correct during sign in
+//METHOD CHECK if the password is correct during sign in or update password
 userSchema.methods.isPasswordCorrect = async function(
     inputPassword,
     userPassword
