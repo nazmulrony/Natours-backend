@@ -59,7 +59,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     ) {
         token = req.headers.authorization.split(' ')[1];
     }
-    console.log('Token', req.headers.authorization);
 
     if (!token) {
         return next(
@@ -187,7 +186,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-    console.log('handler executed');
     // 1) Get user from collection
     const user = await User.findById(req.user.id).select('+password');
 
