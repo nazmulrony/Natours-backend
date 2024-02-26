@@ -48,7 +48,12 @@ const userSchema = new Schema({
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
-    passwordResetExpires: Date
+    passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    }
 });
 
 // middleware to check if both password and the confirm passwords are same
@@ -69,6 +74,12 @@ userSchema.pre('save', async function(next) {
     if (!this.isModified('password') || this.isNew) return next();
 
     this.passwordChangedAt = Date.now() - 1000; //This is because sometimes saving to database takes more time than issuing Jwt token.
+    next();
+});
+
+// Query middleware to filter out the inactive users
+userSchema.pre(/^find/, function(next) {
+    this.find({ active: { $ne: false } });
     next();
 });
 
