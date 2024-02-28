@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -10,6 +12,8 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 //MIDDLEWARES
+app.use(helmet());
+
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
@@ -23,6 +27,9 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 app.use(express.json());
+
+app.use(mongoSanitize());
+
 app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
