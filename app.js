@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
+// const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -28,7 +29,11 @@ app.use('/api', limiter);
 
 app.use(express.json());
 
+//Data sanitization against noSQL query injection
 app.use(mongoSanitize());
+
+//Prevents parameter pollution
+// app.use(hpp());
 
 app.use(express.static(`${__dirname}/public`));
 
